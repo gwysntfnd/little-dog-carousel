@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Little Dog Carousel</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Verdana, sans-serif; color: white; }
+        .slideshow-container { max-width: 100%; position: relative; margin: auto; overflow: hidden; }
+        .mySlides { display: none; text-align: center; }
+        img { vertical-align: middle; width: 100%; border-radius: 8px; }
+        .prev, .next {
+            cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%);
+            width: 50px; height: 50px; background-color: rgba(0, 0, 0, 0.6);
+            color: white; font-weight: bold; font-size: 20px;
+            border: none; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; transition: 0.4s ease;
+        }
+        .next { right: 10px; }
+        .prev { left: 10px; }
+        .prev:hover, .next:hover { background-color: rgba(255, 255, 255, 0.3); }
+        .text { color: #fff; font-size: 16px; background: rgba(0, 0, 0, 0.6); padding: 10px;
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: auto; max-width: 80%; text-align: center; border-radius: 5px; }
+        .numbertext { color: #fff; font-size: 14px; position: absolute; top: 8px; left: 12px; }
+        .dot-container { text-align: center; padding: 15px 0; }
+        .dot { cursor: pointer; height: 12px; width: 12px; margin: 0 4px;
+            background-color: #bbb; border-radius: 50%; display: inline-block; transition: 0.3s ease; }
+        .active, .dot:hover { background-color: #717171; }
+        @keyframes fade { from { opacity: 0.4; } to { opacity: 1; } }
+        .fade { animation: fade 1.2s ease-in-out; }
+    </style>
+</head>
+<body>
+    
+    <div class="slideshow-container" id="slideshow-container">
+        <a class="prev" onclick="plusSlides(-1)">❮</a>
+        <a class="next" onclick="plusSlides(1)">❯</a>
+    </div>
+
+    <div class="dot-container" id="dots-container"></div>
+    <script>
+        const xmlString = `
+        <slideshow>
+            <slide>
+                <image>https://www.littledogsocialmedia.com/wp-content/uploads/2019/05/Winter_2024_Little_Dog_Website_Sliders-1.jpg</image>
+                <caption>Little Dog</caption>
+            </slide>
+            <slide>
+                <image>https://www.littledogsocialmedia.com/wp-content/uploads/2019/05/Team_Collage_Slider.jpg</image>
+                <caption>Little Dog</caption>
+            </slide>
+            <slide>
+                <image>https://www.littledogsocialmedia.com/wp-content/uploads/2019/05/3-4.png</image>
+                <caption>Little Dog</caption>
+            </slide>
+            <slide>
+                <image>https://www.littledogsocialmedia.com/wp-content/uploads/2019/05/4-4.png</image>
+                <caption>Little Dog</caption>
+            </slide>
+        </slideshow>`;
+        
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+        const slides = xmlDoc.getElementsByTagName("slide");
+        const slideshowContainer = document.getElementById("slideshow-container");
+        const dotsContainer = document.getElementById("dots-container");
+        
+        for (let i = 0; i < slides.length; i++) {
+            let slideDiv = document.createElement("div");
+            slideDiv.className = "mySlides fade";
+
+            if (i === 0) slideDiv.style.display = "block";
+
+            let numberText = document.createElement("div");
+            numberText.className = "numbertext";
+            numberText.textContent = `${i + 1} / ${slides.length}`;
+
+            let img = document.createElement("img");
+            img.src = slides[i].getElementsByTagName("image")[0].textContent;
+
+            let caption = document.createElement("div");
+            caption.className = "text";
+            caption.textContent = slides[i].getElementsByTagName("caption")[0].textContent;
+
+            slideDiv.appendChild(numberText);
+            slideDiv.appendChild(img);
+            slideDiv.appendChild(caption);
+            slideshowContainer.appendChild(slideDiv);
+
+            let dot = document.createElement("span");
+            dot.className = "dot";
+
+            if (i === 0) dot.classList.add("active");
+            dot.onclick = function () { currentSlide(i + 1); };
+            dotsContainer.appendChild(dot);
+        }
+        
+        let slideIndex = 1;
+        function plusSlides(n) { 
+            showSlides(slideIndex += n); 
+        }
+
+        function currentSlide(n) { 
+            showSlides(slideIndex = n); 
+        }
+        function showSlides(n) {
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("dot");
+            if (n > slides.length) { 
+                slideIndex = 1; 
+            }
+            if (n < 1) { 
+                slideIndex = slides.length; 
+            }
+            for (let slide of slides) { 
+                slide.style.display = "none"; 
+            }
+            for (let dot of dots) { 
+                dot.classList.remove("active"); 
+            }
+
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].classList.add("active");
+        }
+    </script>
+
+</body>
+</html>
